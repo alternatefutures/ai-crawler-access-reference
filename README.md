@@ -2,6 +2,8 @@
 
 A source-linked reference and zero-dependency policy generator for the robots.txt controls documented by OpenAI, Anthropic, Perplexity, and Google.
 
+Use the [interactive browser reference and policy generator](https://alternatefutures.github.io/ai-crawler-access-reference/) or run the zero-dependency CLI locally.
+
 The important distinction is purpose: search discovery, model-training collection, and user-triggered retrieval are separate controls. Allowing one does not automatically allow another. A crawler being allowed also does **not** guarantee crawling, indexing, ranking, recommendations, mentions, or citations.
 
 Last source review: **2026-08-29**

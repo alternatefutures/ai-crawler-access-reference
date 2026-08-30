@@ -46,6 +46,7 @@ test("README states limits and publisher ownership", async () => {
   const readme = await readFile(new URL("README.md", root), "utf8");
   assert.match(readme, /does \*\*not\*\* guarantee crawling, indexing, ranking, recommendations, mentions, or citations/i);
   assert.match(readme, /Published by \[Alternate Futures\]/);
+  assert.match(readme, /interactive browser reference and policy generator/);
   assert.match(readme, /utm_source=github/);
   assert.match(readme, /\[CC0 1\.0\]\(DATA_LICENSE\.md\)/);
   assert.match(readme, /never edits a site or local file/i);
