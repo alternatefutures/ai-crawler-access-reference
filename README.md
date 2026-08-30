@@ -1,6 +1,6 @@
-# AI crawler access reference
+# AI crawler access reference and robots.txt generator
 
-A small, source-linked reference for the robots.txt tokens documented by OpenAI, Anthropic, Perplexity, and Google.
+A source-linked reference and zero-dependency policy generator for the robots.txt controls documented by OpenAI, Anthropic, Perplexity, and Google.
 
 The important distinction is purpose: search discovery, model-training collection, and user-triggered retrieval are separate controls. Allowing one does not automatically allow another. A crawler being allowed also does **not** guarantee crawling, indexing, ranking, recommendations, mentions, or citations.
 
