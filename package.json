@@ -1,0 +1,9 @@
+{
+  "name": "ai-crawler-access-reference",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/reference.test.mjs"
+  }
+}
