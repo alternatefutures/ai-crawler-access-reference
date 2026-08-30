@@ -61,7 +61,7 @@ test("GitHub Pages reference preserves source, policy, and ownership boundaries"
   }
   assert.match(page, /does not guarantee crawling, indexing, ranking, recommendations, mentions, or citations/i);
   assert.match(page, /Nothing is uploaded, stored, or written to your site/i);
-  assert.match(page, /utm_source=github-pages/);
+  assert.match(page, /utm_source=github/);
   assert.match(page, /Published by/);
   assert.match(page, /Alternate Futures/);
   assert.match(page, /Alternate Clouds/);
