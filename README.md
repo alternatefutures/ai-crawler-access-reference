@@ -40,9 +40,6 @@ Allow: /
 User-agent: ClaudeBot
 Disallow: /
 
-User-agent: Claude-User
-Allow: /
-
 User-agent: PerplexityBot
 Allow: /
 
@@ -54,6 +51,18 @@ Disallow: /
 ```
 
 Copyable files are in [`examples/`](examples/). Preserve unrelated rules in an existing robots.txt file and test the public response after any change.
+
+## Generate a policy locally
+
+The zero-dependency CLI prints to standard output and never edits a site or local file:
+
+```sh
+npm run generate -- --policy search-only
+```
+
+Use `--policy allow-automatic` to allow the documented automatic search and model-development controls. Both policies intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User` because user-triggered retrieval and robots.txt behavior differ by provider.
+
+Review the generated text, merge it with existing rules, and test the public response before deployment. The checked-in files under [`examples/`](examples/) are generated-policy fixtures.
 
 ## Primary sources
 

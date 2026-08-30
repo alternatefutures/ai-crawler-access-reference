@@ -19,13 +19,27 @@ test("machine-readable files agree on the ten documented controls", async () => 
 });
 
 test("examples separate search discovery from training controls", async () => {
+  const { generatePolicy } = await import("../bin/generate-robots.mjs");
   const policy = await readFile(new URL("examples/allow-search-block-training.txt", root), "utf8");
+  assert.equal(policy, await generatePolicy("search-only"));
   for (const token of ["OAI-SearchBot", "Claude-SearchBot", "PerplexityBot", "Googlebot"]) {
     assert.match(policy, new RegExp(`User-agent: ${token}\\nAllow: /`));
   }
   for (const token of ["GPTBot", "ClaudeBot", "Google-Extended"]) {
     assert.match(policy, new RegExp(`User-agent: ${token}\\nDisallow: /`));
   }
+  for (const token of ["ChatGPT-User", "Claude-User", "Perplexity-User"]) assert.doesNotMatch(policy, new RegExp(token));
+});
+
+test("allow-automatic fixture is generated and still omits user-triggered agents", async () => {
+  const { generatePolicy } = await import("../bin/generate-robots.mjs");
+  const policy = await readFile(new URL("examples/allow-documented-automatic-crawlers.txt", root), "utf8");
+  assert.equal(policy, await generatePolicy("allow-automatic"));
+  for (const token of ["OAI-SearchBot", "Claude-SearchBot", "PerplexityBot", "Googlebot", "GPTBot", "ClaudeBot", "Google-Extended"]) {
+    assert.match(policy, new RegExp(`User-agent: ${token}\\nAllow: /`));
+  }
+  for (const token of ["ChatGPT-User", "Claude-User", "Perplexity-User"]) assert.doesNotMatch(policy, new RegExp(token));
+  await assert.rejects(generatePolicy("invented-policy"), /Unknown policy/);
 });
 
 test("README states limits and publisher ownership", async () => {
@@ -34,4 +48,6 @@ test("README states limits and publisher ownership", async () => {
   assert.match(readme, /Published by \[Alternate Futures\]/);
   assert.match(readme, /utm_source=github/);
   assert.match(readme, /\[CC0 1\.0\]\(DATA_LICENSE\.md\)/);
+  assert.match(readme, /never edits a site or local file/i);
+  assert.match(readme, /intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User`/);
 });

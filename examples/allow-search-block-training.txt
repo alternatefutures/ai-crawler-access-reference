@@ -1,11 +1,11 @@
-# Search discovery
+# AI crawler policy generated from sources reviewed 2026-08-29
+# User-triggered agents are intentionally omitted because provider behavior differs.
+
+# Automatic search discovery
 User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: Claude-SearchBot
-Allow: /
-
-User-agent: Claude-User
 Allow: /
 
 User-agent: PerplexityBot
@@ -14,7 +14,7 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-# Model-training and Gemini grounding controls
+# Model-development and grounding controls: blocked
 User-agent: GPTBot
 Disallow: /
 
