@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Crawler Access Reference &amp; robots.txt Generator</title>
+  <meta name="description" content="A source-linked reference and browser-only robots.txt policy generator for documented OpenAI, Anthropic, Perplexity, and Google crawler controls.">
+  <link rel="canonical" href="https://alternatefutures.github.io/ai-crawler-access-reference/">
+  <meta property="og:title" content="AI Crawler Access Reference">
+  <meta property="og:description" content="Separate search discovery, model-development controls, and user-triggered retrieval before editing robots.txt.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://alternatefutures.github.io/ai-crawler-access-reference/">
+  <link rel="icon" href="https://answerready.alternatefutures.ai/favicon.svg" type="image/svg+xml">
+  <style>
+    :root { color-scheme: light; --ink:#10251f; --paper:#fffaf2; --lime:#caff45; --mint:#c9f5df; --lav:#dfd0ff; --coral:#ff8b78; --line:#bdd0c8; --soft:#f2efe8; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin:0; color:var(--ink); background:radial-gradient(circle at 10% 2%,#ecffb9 0 9%,transparent 23%),radial-gradient(circle at 94% 12%,#e8dcff 0 8%,transparent 22%),var(--paper); font:16px/1.55 ui-rounded,"Nunito Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:inherit; text-underline-offset:3px; }
+    button,select { font:inherit; }
+    .shell { width:min(1120px,calc(100% - 32px)); margin-inline:auto; }
+    .nav { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-top:18px; padding:14px 20px; border:1px solid var(--line); border-radius:999px; background:#fffdf9e8; backdrop-filter:blur(12px); }
+    .brand { font-weight:900; text-decoration:none; letter-spacing:-.03em; }
+    .brand span { background:var(--lime); padding:3px 8px; border-radius:999px; }
+    .nav nav { display:flex; gap:18px; font-size:.9rem; font-weight:700; }
+    .hero { padding:88px 0 64px; }
+    .eyebrow { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid var(--line); border-radius:999px; background:#fff; font-size:.76rem; font-weight:900; letter-spacing:.11em; text-transform:uppercase; }
+    .eyebrow::before { content:""; width:9px; height:9px; border-radius:50%; background:#49cb82; box-shadow:0 0 0 5px #d9f7e6; }
+    h1,h2,h3 { margin:0; font-weight:950; letter-spacing:-.055em; line-height:1.02; }
+    h1 { max-width:920px; margin-top:24px; font-size:clamp(3.4rem,8vw,7.3rem); }
+    h1 em { font-style:normal; background:linear-gradient(90deg,var(--lime),#8ee100); -webkit-background-clip:text; color:transparent; }
+    .lede { max-width:760px; margin:26px 0 0; font-size:clamp(1.12rem,2vw,1.38rem); }
+    .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+    .button { display:inline-flex; align-items:center; justify-content:center; min-height:50px; padding:0 20px; border:2px solid var(--ink); border-radius:999px; font-weight:900; text-decoration:none; cursor:pointer; }
+    .button.primary { background:var(--ink); color:#fff; box-shadow:0 5px 0 #90aa9f; }
+    .button.secondary { background:#fff; }
+    .notice { margin:0 auto 64px; padding:22px 26px; border:1px solid #efbf7b; border-radius:22px; background:#fff1d9; }
+    .notice strong { display:block; margin-bottom:4px; }
+    .section { padding:72px 0; border-top:1px solid var(--line); }
+    .section-head { display:grid; grid-template-columns:.75fr 1.25fr; gap:32px; align-items:end; margin-bottom:28px; }
+    .kicker { margin:0 0 9px; font-size:.75rem; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+    h2 { font-size:clamp(2.2rem,5vw,4.8rem); }
+    .section-head > p { max-width:620px; margin:0; font-size:1.06rem; }
+    .generator { display:grid; grid-template-columns:.8fr 1.2fr; border:1px solid var(--line); border-radius:28px; overflow:hidden; background:#fff; box-shadow:0 14px 50px #2a473b14; }
+    .controls { padding:30px; background:linear-gradient(145deg,#efffc9,#e2fff0); }
+    .controls label { display:block; margin:0 0 8px; font-weight:900; }
+    .controls select { width:100%; min-height:48px; padding:0 12px; border:1px solid #8fa59b; border-radius:14px; background:#fff; color:var(--ink); }
+    .controls p { margin:18px 0 0; font-size:.93rem; }
+    .output { min-width:0; padding:26px; background:#10251f; color:#e7fff2; }
+    .output-top { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; }
+    .output h3 { font-size:1.25rem; letter-spacing:-.02em; }
+    #copy { min-height:40px; padding:0 15px; border:1px solid #a9d9c4; border-radius:999px; color:inherit; background:#ffffff12; font-weight:800; cursor:pointer; }
+    pre { margin:0; overflow:auto; white-space:pre-wrap; font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:24px; background:#fff; }
+    table { width:100%; border-collapse:collapse; min-width:880px; }
+    th,td { padding:16px; border-bottom:1px solid #dae6e1; text-align:left; vertical-align:top; }
+    th { position:sticky; top:0; background:#eaf8f0; font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; }
+    tbody tr:last-child td { border-bottom:0; }
+    code,.pill { padding:3px 7px; border-radius:8px; background:#edf3f0; font: .84rem ui-monospace,SFMono-Regular,Menlo,monospace; }
+    .pill { display:inline-block; background:var(--lav); font-family:inherit; font-weight:800; }
+    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .card { padding:24px; border:1px solid var(--line); border-radius:24px; background:#fff; }
+    .card:nth-child(1) { background:#f2ffd4; } .card:nth-child(2) { background:#efe8ff; } .card:nth-child(3) { background:#ffe4de; }
+    .card h3 { margin-bottom:10px; font-size:1.3rem; letter-spacing:-.025em; }
+    .card p { margin:0; }
+    .sources { columns:2; column-gap:36px; padding:0; list-style:none; }
+    .sources li { break-inside:avoid; margin:0 0 14px; }
+    footer { margin-top:20px; padding:36px 0 52px; border-top:1px solid var(--line); }
+    footer .shell { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; }
+    footer p { max-width:650px; margin:0; }
+    footer nav { display:flex; gap:16px; flex-wrap:wrap; font-weight:800; }
+    @media (max-width:760px) { .nav nav{display:none}.hero{padding-top:64px}.section-head,.generator{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.sources{columns:1}footer .shell{display:block}footer nav{margin-top:18px} }
+  </style>
+</head>
+<body>
+  <header class="nav shell">
+    <a class="brand" href="#top">Crawler<span>Reference</span></a>
+    <nav aria-label="Main navigation"><a href="#generator">Generator</a><a href="#matrix">Crawler matrix</a><a href="#sources">Sources</a></nav>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <span class="eyebrow">Sources reviewed 2026-08-29</span>
+      <h1>One robots.txt file.<br><em>Three different purposes.</em></h1>
+      <p class="lede">Search discovery, model-development controls, and user-triggered retrieval are not interchangeable. Use the documented tokens below before you change crawler access.</p>
+      <div class="actions">
+        <a class="button primary" href="#generator">Generate a starting policy ↓</a>
+        <a class="button secondary" href="https://answerready.alternatefutures.ai/ai-crawler-checker?utm_source=github-pages&amp;utm_medium=reference-site&amp;utm_campaign=ai-crawler-reference">Check a live site free ↗</a>
+      </div>
+    </section>
+
+    <aside class="notice shell">
+      <strong>Access is not an outcome.</strong>
+      Allowing a crawler does not guarantee crawling, indexing, ranking, recommendations, mentions, or citations. Preserve unrelated robots.txt rules and test the public response after any change.
+    </aside>
+
+    <section class="section shell" id="generator">
+      <div class="section-head">
+        <div><p class="kicker">Browser-only utility</p><h2>Generate a policy.</h2></div>
+        <p>Choose a documented starting posture. Nothing is uploaded, stored, or written to your site. User-triggered agents are omitted because provider robots.txt behavior differs.</p>
+      </div>
+      <div class="generator">
+        <div class="controls">
+          <label for="policy">Starting posture</label>
+          <select id="policy">
+            <option value="search-only">Allow search discovery; block model-development controls</option>
+            <option value="allow-automatic">Allow documented automatic controls</option>
+          </select>
+          <p><strong>Before publishing:</strong> merge this with existing rules, keep directives you still need, confirm vendor documentation, and fetch the final public robots.txt file.</p>
+        </div>
+        <div class="output">
+          <div class="output-top"><h3>robots.txt starting point</h3><button id="copy" type="button">Copy</button></div>
+          <pre id="policy-output" aria-live="polite"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="matrix">
+      <div class="section-head">
+        <div><p class="kicker">Quick reference</p><h2>Purpose first.</h2></div>
+        <p>Ten documented controls across four providers. The category column is the important one: it prevents a training opt-out from being mistaken for a search-discovery block.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Provider</th><th>Token</th><th>Category</th><th>Documented purpose</th><th>robots.txt note</th></tr></thead>
+          <tbody>
+            <tr><td>OpenAI</td><td><code>OAI-SearchBot</code></td><td><span class="pill">Search discovery</span></td><td>Surface websites in ChatGPT search results</td><td>Independent robots.txt control</td></tr>
+            <tr><td>OpenAI</td><td><code>GPTBot</code></td><td><span class="pill">Model training</span></td><td>Collect content that may improve foundation models</td><td>Independent robots.txt control</td></tr>
+            <tr><td>OpenAI</td><td><code>ChatGPT-User</code></td><td><span class="pill">User-triggered</span></td><td>Fetch a page for certain ChatGPT and custom GPT actions</td><td>robots.txt rules may not apply</td></tr>
+            <tr><td>Anthropic</td><td><code>Claude-SearchBot</code></td><td><span class="pill">Search discovery</span></td><td>Navigate the web for Claude search-result quality</td><td>Anthropic says its bots honor standard directives</td></tr>
+            <tr><td>Anthropic</td><td><code>ClaudeBot</code></td><td><span class="pill">Model training</span></td><td>Collect public content that may contribute to training</td><td>Separate from Claude search and user retrieval</td></tr>
+            <tr><td>Anthropic</td><td><code>Claude-User</code></td><td><span class="pill">User-triggered</span></td><td>Retrieve content at a Claude user's direction</td><td>Documented as a distinct control</td></tr>
+            <tr><td>Perplexity</td><td><code>PerplexityBot</code></td><td><span class="pill">Search discovery</span></td><td>Surface and link sites in Perplexity search results</td><td>Published token and IP ranges</td></tr>
+            <tr><td>Perplexity</td><td><code>Perplexity-User</code></td><td><span class="pill">User-triggered</span></td><td>Visit a page for a user request</td><td>Generally ignores robots.txt for requested fetches</td></tr>
+            <tr><td>Google</td><td><code>Googlebot</code></td><td><span class="pill">Search discovery</span></td><td>Build Google Search indexes and related products</td><td>Common crawler that obeys robots.txt</td></tr>
+            <tr><td>Google</td><td><code>Google-Extended</code></td><td><span class="pill">Training + grounding</span></td><td>Control Gemini training and grounding</td><td>Control token, not a separate HTTP user agent</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-head">
+        <div><p class="kicker">Use the distinction</p><h2>Three checks.</h2></div>
+        <p>A robots.txt decision should begin with the site's policy objective, not a copied blocklist or a vague “AI crawler” label.</p>
+      </div>
+      <div class="cards">
+        <article class="card"><h3>1. Name the purpose</h3><p>Decide separately whether you want search discovery, model-development collection, and user-triggered retrieval.</p></article>
+        <article class="card"><h3>2. Preserve existing rules</h3><p>Merge new directives into the site's current robots.txt. Do not overwrite sitemap, search, asset, or platform-specific rules.</p></article>
+        <article class="card"><h3>3. Verify the public file</h3><p>Fetch the final URL, confirm redirects and content type, and re-check provider documentation when behavior matters.</p></article>
+      </div>
+    </section>
+
+    <section class="section shell" id="sources">
+      <div class="section-head">
+        <div><p class="kicker">Primary documentation</p><h2>Source, not folklore.</h2></div>
+        <p>Provider pages change. The repository keeps machine-readable CSV and JSON, dated source checks, tested policy fixtures, and a correction workflow.</p>
+      </div>
+      <ul class="sources">
+        <li><a href="https://developers.openai.com/api/docs/bots">OpenAI crawler documentation ↗</a></li>
+        <li><a href="https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler">Anthropic crawler documentation ↗</a></li>
+        <li><a href="https://docs.perplexity.ai/docs/resources/perplexity-crawlers">Perplexity crawler documentation ↗</a></li>
+        <li><a href="https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers">Google common crawler documentation ↗</a></li>
+        <li><a href="https://github.com/alternatefutures/ai-crawler-access-reference">Dataset, tests, fixtures, and corrections ↗</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">
+      <p>Published by <a href="https://alternatefutures.ai/">Alternate Futures</a>. Want the public file checked? Use <a href="https://answerready.alternatefutures.ai/ai-crawler-checker?utm_source=github-pages&amp;utm_medium=reference-site&amp;utm_campaign=ai-crawler-reference">AnswerReady's free crawler checker</a>. Implementation and recurring hosting are separately scoped through <a href="https://clouds.alternatefutures.ai/">Alternate Clouds</a>.</p>
+      <nav><a href="https://github.com/alternatefutures/ai-crawler-access-reference">GitHub</a><a href="#top">Back to top ↑</a></nav>
+    </div>
+  </footer>
+
+  <script>
+    const reviewed = "2026-08-29";
+    const search = ["OAI-SearchBot","Claude-SearchBot","PerplexityBot","Googlebot"];
+    const development = ["GPTBot","ClaudeBot","Google-Extended"];
+    const output = document.querySelector("#policy-output");
+    const choice = document.querySelector("#policy");
+    const copy = document.querySelector("#copy");
+    function generate() {
+      const lines = [`# AI crawler policy generated from sources reviewed ${reviewed}`,"# User-triggered agents are intentionally omitted because provider behavior differs.","","# Automatic search discovery"];
+      search.forEach(token => lines.push(`User-agent: ${token}`,"Allow: /",""));
+      const block = choice.value === "search-only";
+      lines.push(block ? "# Model-development and grounding controls: blocked" : "# Model-development and grounding controls: allowed");
+      development.forEach(token => lines.push(`User-agent: ${token}`,block ? "Disallow: /" : "Allow: /",""));
+      output.textContent = lines.join("\n").trimEnd() + "\n";
+    }
+    choice.addEventListener("change",generate);
+    copy.addEventListener("click",async () => {
+      try { await navigator.clipboard.writeText(output.textContent); copy.textContent="Copied"; setTimeout(()=>copy.textContent="Copy",1600); }
+      catch { copy.textContent="Select and copy"; }
+    });
+    generate();
+  </script>
+</body>
+</html>

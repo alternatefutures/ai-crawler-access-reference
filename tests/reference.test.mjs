@@ -51,3 +51,21 @@ test("README states limits and publisher ownership", async () => {
   assert.match(readme, /never edits a site or local file/i);
   assert.match(readme, /intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User`/);
 });
+
+test("GitHub Pages reference preserves source, policy, and ownership boundaries", async () => {
+  const page = await readFile(new URL("docs/index.html", root), "utf8");
+  const robots = await readFile(new URL("docs/robots.txt", root), "utf8");
+  const sitemap = await readFile(new URL("docs/sitemap.xml", root), "utf8");
+  for (const token of ["OAI-SearchBot", "GPTBot", "ChatGPT-User", "Claude-SearchBot", "ClaudeBot", "Claude-User", "PerplexityBot", "Perplexity-User", "Googlebot", "Google-Extended"]) {
+    assert.match(page, new RegExp(token));
+  }
+  assert.match(page, /does not guarantee crawling, indexing, ranking, recommendations, mentions, or citations/i);
+  assert.match(page, /Nothing is uploaded, stored, or written to your site/i);
+  assert.match(page, /utm_source=github-pages/);
+  assert.match(page, /Published by/);
+  assert.match(page, /Alternate Futures/);
+  assert.match(page, /Alternate Clouds/);
+  assert.match(page, /2026-08-29/);
+  assert.match(robots, /Sitemap: https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\/sitemap\.xml/);
+  assert.match(sitemap, /https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\//);
+});

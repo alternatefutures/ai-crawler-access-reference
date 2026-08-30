@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alternatefutures.github.io/ai-crawler-access-reference/sitemap.xml
