@@ -67,6 +67,19 @@ test("GitHub Pages reference preserves source, policy, and ownership boundaries"
   assert.match(page, /Alternate Futures/);
   assert.match(page, /Alternate Clouds/);
   assert.match(page, /2026-08-29/);
+  assert.match(page, /IMPLEMENTATION_CHECKLIST\.md/);
   assert.match(robots, /Sitemap: https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\//);
+});
+
+test("implementation checklist separates policy, deployment validation, and outcome evidence", async () => {
+  const checklist = await readFile(new URL("IMPLEMENTATION_CHECKLIST.md", root), "utf8");
+  assert.match(checklist, /Define the intended policy/);
+  assert.match(checklist, /Inventory the existing controls/);
+  assert.match(checklist, /Validate before and after publishing/);
+  assert.match(checklist, /Measure the right evidence/);
+  assert.match(checklist, /Never report an allowed `robots\.txt` result as proof/i);
+  assert.match(checklist, /AnswerReady's free AI crawler checker/);
+  assert.match(checklist, /Published by \[Alternate Futures\]/);
+  assert.match(checklist, /Alternate Clouds/);
 });
