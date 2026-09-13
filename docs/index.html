@@ -11,6 +11,45 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://alternatefutures.github.io/ai-crawler-access-reference/">
   <link rel="icon" href="https://answerready.alternatefutures.ai/favicon.svg" type="image/svg+xml">
+  <script id="dataset-metadata" type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      "name": "AI Crawler Access Reference",
+      "description": "A source-linked dataset of documented crawler and control tokens from OpenAI, Anthropic, Perplexity, and Google, classified by search discovery, model training, grounding, and user-triggered retrieval purpose.",
+      "url": "https://alternatefutures.github.io/ai-crawler-access-reference/",
+      "sameAs": "https://github.com/alternatefutures/ai-crawler-access-reference",
+      "identifier": "https://github.com/alternatefutures/ai-crawler-access-reference/tree/main/data",
+      "datePublished": "2026-08-29",
+      "dateModified": "2026-09-12",
+      "isAccessibleForFree": true,
+      "keywords": ["AI crawlers", "robots.txt", "OAI-SearchBot", "GPTBot", "Claude-SearchBot", "PerplexityBot", "Google-Extended"],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": {
+        "@type": "Organization",
+        "name": "Alternate Futures",
+        "url": "https://alternatefutures.ai/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Alternate Futures",
+        "url": "https://alternatefutures.ai/"
+      },
+      "measurementTechnique": "Manual review of first-party crawler documentation linked in each record.",
+      "distribution": [
+        {
+          "@type": "DataDownload",
+          "encodingFormat": "text/csv",
+          "contentUrl": "https://alternatefutures.github.io/ai-crawler-access-reference/data/crawlers.csv"
+        },
+        {
+          "@type": "DataDownload",
+          "encodingFormat": "application/json",
+          "contentUrl": "https://alternatefutures.github.io/ai-crawler-access-reference/data/crawlers.json"
+        }
+      ]
+    }
+  </script>
   <style>
     :root { color-scheme: light; --ink:#10251f; --paper:#fffaf2; --lime:#caff45; --mint:#c9f5df; --lav:#dfd0ff; --coral:#ff8b78; --line:#bdd0c8; --soft:#f2efe8; }
     * { box-sizing: border-box; }
@@ -63,19 +102,22 @@
     .card:nth-child(1) { background:#f2ffd4; } .card:nth-child(2) { background:#efe8ff; } .card:nth-child(3) { background:#ffe4de; }
     .card h3 { margin-bottom:10px; font-size:1.3rem; letter-spacing:-.025em; }
     .card p { margin:0; }
+    .downloads { grid-template-columns:repeat(2,1fr); }
+    .download { display:block; color:inherit; text-decoration:none; }
+    .download span { display:block; margin-top:18px; font-weight:900; text-decoration:underline; text-underline-offset:3px; }
     .sources { columns:2; column-gap:36px; padding:0; list-style:none; }
     .sources li { break-inside:avoid; margin:0 0 14px; }
     footer { margin-top:20px; padding:36px 0 52px; border-top:1px solid var(--line); }
     footer .shell { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; }
     footer p { max-width:650px; margin:0; }
     footer nav { display:flex; gap:16px; flex-wrap:wrap; font-weight:800; }
-    @media (max-width:760px) { .nav nav{display:none}.hero{padding-top:64px}.section-head,.generator{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.sources{columns:1}footer .shell{display:block}footer nav{margin-top:18px} }
+    @media (max-width:760px) { .nav nav{display:none}.hero{padding-top:64px}.section-head,.generator{grid-template-columns:1fr}.cards,.downloads{grid-template-columns:1fr}.sources{columns:1}footer .shell{display:block}footer nav{margin-top:18px} }
   </style>
 </head>
 <body>
   <header class="nav shell">
     <a class="brand" href="#top">Crawler<span>Reference</span></a>
-    <nav aria-label="Main navigation"><a href="#generator">Generator</a><a href="#matrix">Crawler matrix</a><a href="https://github.com/alternatefutures/ai-crawler-access-reference/blob/main/IMPLEMENTATION_CHECKLIST.md">Implementation checklist</a><a href="#sources">Sources</a></nav>
+    <nav aria-label="Main navigation"><a href="#generator">Generator</a><a href="#matrix">Crawler matrix</a><a href="#dataset">Dataset</a><a href="https://github.com/alternatefutures/ai-crawler-access-reference/blob/main/IMPLEMENTATION_CHECKLIST.md">Implementation checklist</a><a href="#sources">Sources</a></nav>
   </header>
 
   <main id="top">
@@ -136,6 +178,17 @@
             <tr><td>Google</td><td><code>Google-Extended</code></td><td><span class="pill">Training + grounding</span></td><td>Control Gemini training and grounding</td><td>Control token, not a separate HTTP user agent</td></tr>
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <section class="section shell" id="dataset">
+      <div class="section-head">
+        <div><p class="kicker">Open data</p><h2>Download the reference.</h2></div>
+        <p>Use the ten-record dataset in a spreadsheet, script, or audit workflow. Each record includes its first-party source URL and review date. The factual data is released under CC0; provider names and linked third-party material remain their owners' property.</p>
+      </div>
+      <div class="cards downloads">
+        <a class="card download" href="data/crawlers.csv"><h3>CSV</h3><p>Eight columns covering provider, token, purpose, automation, robots.txt behavior, source, and review date.</p><span>Download crawlers.csv ↓</span></a>
+        <a class="card download" href="data/crawlers.json"><h3>JSON</h3><p>Ten structured records ready for scripts, documentation generators, and audit tools.</p><span>Download crawlers.json ↓</span></a>
       </div>
     </section>
 

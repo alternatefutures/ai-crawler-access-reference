@@ -68,8 +68,48 @@ test("GitHub Pages reference preserves source, policy, and ownership boundaries"
   assert.match(page, /Alternate Clouds/);
   assert.match(page, /2026-08-29/);
   assert.match(page, /IMPLEMENTATION_CHECKLIST\.md/);
+  assert.match(page, /href="data\/crawlers\.csv"/);
+  assert.match(page, /href="data\/crawlers\.json"/);
   assert.match(robots, /Sitemap: https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\//);
+  assert.match(sitemap, /<lastmod>2026-09-12<\/lastmod>/);
+});
+
+test("GitHub Pages publishes matching downloads and valid Dataset metadata", async () => {
+  const page = await readFile(new URL("docs/index.html", root), "utf8");
+  const sourceCsv = await readFile(new URL("data/crawlers.csv", root), "utf8");
+  const sourceJson = JSON.parse(await readFile(new URL("data/crawlers.json", root), "utf8"));
+  const publishedCsv = await readFile(new URL("docs/data/crawlers.csv", root), "utf8");
+  const publishedJson = JSON.parse(await readFile(new URL("docs/data/crawlers.json", root), "utf8"));
+  assert.equal(publishedCsv, sourceCsv);
+  assert.deepEqual(publishedJson, sourceJson);
+
+  const match = page.match(/<script id="dataset-metadata" type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  assert.ok(match, "Dataset JSON-LD must be present");
+  const metadata = JSON.parse(match[1]);
+  assert.equal(metadata["@context"], "https://schema.org");
+  assert.equal(metadata["@type"], "Dataset");
+  assert.equal(metadata.name, "AI Crawler Access Reference");
+  assert.ok(metadata.description.length >= 50);
+  assert.equal(metadata.dateModified, "2026-09-12");
+  assert.equal(metadata.creator.name, "Alternate Futures");
+  assert.equal(metadata.license, "https://creativecommons.org/publicdomain/zero/1.0/");
+  assert.equal(metadata.isAccessibleForFree, true);
+  assert.deepEqual(
+    metadata.distribution.map(({ "@type": type, encodingFormat, contentUrl }) => ({ type, encodingFormat, contentUrl })),
+    [
+      {
+        type: "DataDownload",
+        encodingFormat: "text/csv",
+        contentUrl: "https://alternatefutures.github.io/ai-crawler-access-reference/data/crawlers.csv"
+      },
+      {
+        type: "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: "https://alternatefutures.github.io/ai-crawler-access-reference/data/crawlers.json"
+      }
+    ]
+  );
 });
 
 test("implementation checklist separates policy, deployment validation, and outcome evidence", async () => {
