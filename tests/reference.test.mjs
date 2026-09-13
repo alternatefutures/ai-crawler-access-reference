@@ -53,6 +53,19 @@ test("README states limits and publisher ownership", async () => {
   assert.match(readme, /intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User`/);
 });
 
+test("citation metadata identifies the versioned work as an open dataset", async () => {
+  const citation = await readFile(new URL("CITATION.cff", root), "utf8");
+  assert.match(citation, /^cff-version: 1\.2\.0$/m);
+  assert.match(citation, /^type: dataset$/m);
+  assert.match(citation, /^title: "AI Crawler Access Reference"$/m);
+  assert.match(citation, /^  - name: "Alternate Futures"$/m);
+  assert.match(citation, /^version: "1\.4\.1"$/m);
+  assert.match(citation, /^date-released: "2026-09-12"$/m);
+  assert.match(citation, /^license: CC0-1\.0$/m);
+  assert.match(citation, /^repository-code: "https:\/\/github\.com\/alternatefutures\/ai-crawler-access-reference"$/m);
+  assert.match(citation, /^url: "https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\/"$/m);
+});
+
 test("GitHub Pages reference preserves source, policy, and ownership boundaries", async () => {
   const page = await readFile(new URL("docs/index.html", root), "utf8");
   const robots = await readFile(new URL("docs/robots.txt", root), "utf8");

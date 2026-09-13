@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it using these metadata."
+type: dataset
+title: "AI Crawler Access Reference"
+abstract: "A source-linked dataset of documented crawler and control tokens from OpenAI, Anthropic, Perplexity, and Google, classified by purpose and paired with first-party source URLs and review dates."
+authors:
+  - name: "Alternate Futures"
+    website: "https://alternatefutures.ai/"
+version: "1.4.1"
+date-released: "2026-09-12"
+license: CC0-1.0
+repository-code: "https://github.com/alternatefutures/ai-crawler-access-reference"
+url: "https://alternatefutures.github.io/ai-crawler-access-reference/"
+keywords:
+  - "AI crawlers"
+  - "robots.txt"
+  - "AI search"
+  - "search discovery"
+  - "model training"
+  - "user-triggered retrieval"
+  - "technical SEO"
+  - "answer engine optimization"
