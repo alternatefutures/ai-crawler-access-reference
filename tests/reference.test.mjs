@@ -112,6 +112,13 @@ test("GitHub Pages publishes matching downloads and valid Dataset metadata", asy
   );
 });
 
+test("GitHub Pages carries a path-scoped IndexNow ownership key", async () => {
+  const key = "ac342b4488e2383be6f1b04efc7df013";
+  const contents = await readFile(new URL(`docs/${key}.txt`, root), "utf8");
+  assert.match(key, /^[A-Fa-f0-9-]{8,128}$/);
+  assert.equal(contents, `${key}\n`);
+});
+
 test("implementation checklist separates policy, deployment validation, and outcome evidence", async () => {
   const checklist = await readFile(new URL("IMPLEMENTATION_CHECKLIST.md", root), "utf8");
   assert.match(checklist, /Define the intended policy/);
