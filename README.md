@@ -64,6 +64,12 @@ The zero-dependency CLI prints to standard output and never edits a site or loca
 npm run generate -- --policy search-only
 ```
 
+The package manifest also exposes the `ai-crawler-robots` executable for a reviewed local installation or a future approved registry release:
+
+```sh
+ai-crawler-robots --policy search-only
+```
+
 Use `--policy allow-automatic` to allow the documented automatic search and model-development controls. Both policies intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User` because user-triggered retrieval and robots.txt behavior differ by provider.
 
 Review the generated text, merge it with existing rules, and test the public response before deployment. The checked-in files under [`examples/`](examples/) are generated-policy fixtures.

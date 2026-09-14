@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { readFile } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
+import { readFile, realpath } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 
 const dataUrl = new URL("../data/crawlers.json", import.meta.url);
 const policies = new Set(["search-only", "allow-automatic"]);
@@ -49,7 +49,16 @@ async function main(args) {
   process.stdout.write(await generatePolicy(policy));
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+async function invokedAsCli() {
+  if (!process.argv[1]) return false;
+  const [entrypointPath, modulePath] = await Promise.all([
+    realpath(process.argv[1]),
+    realpath(fileURLToPath(import.meta.url)),
+  ]);
+  return entrypointPath === modulePath;
+}
+
+if (await invokedAsCli()) {
   main(process.argv.slice(2)).catch((error) => {
     process.stderr.write(`${error.message}\n`);
     process.exitCode = 1;
