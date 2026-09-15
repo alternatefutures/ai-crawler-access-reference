@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm, symlink } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -62,7 +62,7 @@ test("README states limits and publisher ownership", async () => {
 test("npm package metadata is complete, private, and narrowly scoped", async () => {
   const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
   assert.equal(packageJson.name, "ai-crawler-access-reference");
-  assert.equal(packageJson.version, "1.4.1");
+  assert.equal(packageJson.version, "1.4.2");
   assert.equal(packageJson.private, true);
   assert.equal(packageJson.license, "MIT");
   assert.equal(packageJson.author.name, "Alternate Futures");
@@ -93,6 +93,51 @@ test("npm executable runs through a package-manager-style symlink", async () => 
     ]);
     assert.equal(stderr, "");
     assert.equal(stdout, expected);
+  } finally {
+    await rm(temporaryDirectory, { recursive: true, force: true });
+  }
+});
+
+test("the packed artifact installs cleanly and runs both policies", async () => {
+  const temporaryDirectory = await mkdtemp(join(tmpdir(), "ai-crawler-package-"));
+  const packDirectory = join(temporaryDirectory, "pack");
+  const installDirectory = join(temporaryDirectory, "install");
+  try {
+    await Promise.all([mkdir(packDirectory), mkdir(installDirectory)]);
+    const { stdout: packOutput } = await execFileAsync("npm", ["pack", "--json", "--pack-destination", packDirectory], {
+      cwd: fileURLToPath(root),
+    });
+    const [packed] = JSON.parse(packOutput);
+    assert.equal(packed.id, "ai-crawler-access-reference@1.4.2");
+    assert.deepEqual(packed.files.map(({ path }) => path).sort(), [
+      "DATA_LICENSE.md",
+      "IMPLEMENTATION_CHECKLIST.md",
+      "LICENSE",
+      "README.md",
+      "bin/generate-robots.mjs",
+      "data/crawlers.csv",
+      "data/crawlers.json",
+      "examples/allow-documented-automatic-crawlers.txt",
+      "examples/allow-search-block-training.txt",
+      "package.json",
+    ]);
+
+    const tarball = join(packDirectory, packed.filename);
+    await execFileAsync("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund", "--no-package-lock", tarball], {
+      cwd: installDirectory,
+    });
+    const executable = join(installDirectory, "node_modules", ".bin", "ai-crawler-robots");
+    for (const [policy, fixture] of [
+      ["search-only", "examples/allow-search-block-training.txt"],
+      ["allow-automatic", "examples/allow-documented-automatic-crawlers.txt"],
+    ]) {
+      const [{ stdout, stderr }, expected] = await Promise.all([
+        execFileAsync(executable, ["--policy", policy]),
+        readFile(new URL(fixture, root), "utf8"),
+      ]);
+      assert.equal(stderr, "");
+      assert.equal(stdout, expected);
+    }
   } finally {
     await rm(temporaryDirectory, { recursive: true, force: true });
   }
