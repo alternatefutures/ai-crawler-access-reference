@@ -98,6 +98,18 @@ test("npm executable runs through a package-manager-style symlink", async () => 
   }
 });
 
+test("importing the CLI ignores a non-file positional argument", async () => {
+  const moduleUrl = new URL("bin/generate-robots.mjs", root).href;
+  const source = `const moduleUnderTest = await import(${JSON.stringify(moduleUrl)}); process.stdout.write(typeof moduleUnderTest.generatePolicy);`;
+  const { stdout, stderr } = await execFileAsync(
+    process.execPath,
+    ["--input-type=module", "--eval", source, "not-a-real-entry"],
+    { cwd: fileURLToPath(root) },
+  );
+  assert.equal(stderr, "");
+  assert.equal(stdout, "function");
+});
+
 test("the packed artifact installs cleanly and runs both policies", async () => {
   const temporaryDirectory = await mkdtemp(join(tmpdir(), "ai-crawler-package-"));
   const packDirectory = join(temporaryDirectory, "pack");

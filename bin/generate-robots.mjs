@@ -51,10 +51,13 @@ async function main(args) {
 
 async function invokedAsCli() {
   if (!process.argv[1]) return false;
-  const [entrypointPath, modulePath] = await Promise.all([
-    realpath(process.argv[1]),
-    realpath(fileURLToPath(import.meta.url)),
-  ]);
+  let entrypointPath;
+  try {
+    entrypointPath = await realpath(process.argv[1]);
+  } catch {
+    return false;
+  }
+  const modulePath = await realpath(fileURLToPath(import.meta.url));
   return entrypointPath === modulePath;
 }
 
