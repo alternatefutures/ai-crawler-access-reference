@@ -57,6 +57,8 @@ test("README states limits and publisher ownership", async () => {
   assert.match(readme, /\[CC0 1\.0\]\(DATA_LICENSE\.md\)/);
   assert.match(readme, /never edits a site or local file/i);
   assert.match(readme, /intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User`/);
+  assert.match(readme, /archive\/945d99c27346208525fc973e57fbe57a8b562424\.tar\.gz/);
+  assert.match(readme, /pinned to an immutable commit/i);
 });
 
 test("npm package metadata is complete, private, and narrowly scoped", async () => {
