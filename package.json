@@ -1,8 +1,40 @@
 {
   "name": "ai-crawler-access-reference",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "private": true,
+  "description": "Source-linked AI crawler controls and a zero-dependency robots.txt policy generator.",
+  "keywords": [
+    "ai-crawlers",
+    "robots.txt",
+    "technical-seo",
+    "chatgpt",
+    "claude",
+    "perplexity",
+    "gemini"
+  ],
+  "homepage": "https://alternatefutures.github.io/ai-crawler-access-reference/",
+  "bugs": {
+    "url": "https://github.com/alternatefutures/ai-crawler-access-reference/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alternatefutures/ai-crawler-access-reference.git"
+  },
+  "author": {
+    "name": "Alternate Futures",
+    "url": "https://alternatefutures.ai/"
+  },
+  "license": "MIT",
   "type": "module",
+  "files": [
+    "bin/generate-robots.mjs",
+    "data/crawlers.csv",
+    "data/crawlers.json",
+    "examples/allow-documented-automatic-crawlers.txt",
+    "examples/allow-search-block-training.txt",
+    "DATA_LICENSE.md",
+    "IMPLEMENTATION_CHECKLIST.md"
+  ],
   "bin": {
     "ai-crawler-robots": "./bin/generate-robots.mjs"
   },

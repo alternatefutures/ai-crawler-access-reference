@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { mkdir, mkdtemp, readFile, rm, symlink } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 
 const root = new URL("../", import.meta.url);
+const execFileAsync = promisify(execFile);
 
 test("machine-readable files agree on the ten documented controls", async () => {
   const json = JSON.parse(await readFile(new URL("data/crawlers.json", root), "utf8"));
@@ -51,6 +57,102 @@ test("README states limits and publisher ownership", async () => {
   assert.match(readme, /\[CC0 1\.0\]\(DATA_LICENSE\.md\)/);
   assert.match(readme, /never edits a site or local file/i);
   assert.match(readme, /intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User`/);
+});
+
+test("npm package metadata is complete, private, and narrowly scoped", async () => {
+  const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
+  assert.equal(packageJson.name, "ai-crawler-access-reference");
+  assert.equal(packageJson.version, "1.4.2");
+  assert.equal(packageJson.private, true);
+  assert.equal(packageJson.license, "MIT");
+  assert.equal(packageJson.author.name, "Alternate Futures");
+  assert.equal(packageJson.homepage, "https://alternatefutures.github.io/ai-crawler-access-reference/");
+  assert.equal(packageJson.repository.url, "git+https://github.com/alternatefutures/ai-crawler-access-reference.git");
+  assert.equal(packageJson.bugs.url, "https://github.com/alternatefutures/ai-crawler-access-reference/issues");
+  assert.equal(packageJson.bin["ai-crawler-robots"], "./bin/generate-robots.mjs");
+  assert.deepEqual(packageJson.files, [
+    "bin/generate-robots.mjs",
+    "data/crawlers.csv",
+    "data/crawlers.json",
+    "examples/allow-documented-automatic-crawlers.txt",
+    "examples/allow-search-block-training.txt",
+    "DATA_LICENSE.md",
+    "IMPLEMENTATION_CHECKLIST.md",
+  ]);
+});
+
+test("npm executable runs through a package-manager-style symlink", async () => {
+  const temporaryDirectory = await mkdtemp(join(tmpdir(), "ai-crawler-cli-"));
+  try {
+    const executable = fileURLToPath(new URL("bin/generate-robots.mjs", root));
+    const executableLink = join(temporaryDirectory, "ai-crawler-robots");
+    await symlink(executable, executableLink);
+    const [{ stdout, stderr }, expected] = await Promise.all([
+      execFileAsync(executableLink, ["--policy", "search-only"]),
+      readFile(new URL("examples/allow-search-block-training.txt", root), "utf8"),
+    ]);
+    assert.equal(stderr, "");
+    assert.equal(stdout, expected);
+  } finally {
+    await rm(temporaryDirectory, { recursive: true, force: true });
+  }
+});
+
+test("importing the CLI ignores a non-file positional argument", async () => {
+  const moduleUrl = new URL("bin/generate-robots.mjs", root).href;
+  const source = `const moduleUnderTest = await import(${JSON.stringify(moduleUrl)}); process.stdout.write(typeof moduleUnderTest.generatePolicy);`;
+  const { stdout, stderr } = await execFileAsync(
+    process.execPath,
+    ["--input-type=module", "--eval", source, "not-a-real-entry"],
+    { cwd: fileURLToPath(root) },
+  );
+  assert.equal(stderr, "");
+  assert.equal(stdout, "function");
+});
+
+test("the packed artifact installs cleanly and runs both policies", async () => {
+  const temporaryDirectory = await mkdtemp(join(tmpdir(), "ai-crawler-package-"));
+  const packDirectory = join(temporaryDirectory, "pack");
+  const installDirectory = join(temporaryDirectory, "install");
+  try {
+    await Promise.all([mkdir(packDirectory), mkdir(installDirectory)]);
+    const { stdout: packOutput } = await execFileAsync("npm", ["pack", "--json", "--pack-destination", packDirectory], {
+      cwd: fileURLToPath(root),
+    });
+    const [packed] = JSON.parse(packOutput);
+    assert.equal(packed.id, "ai-crawler-access-reference@1.4.2");
+    assert.deepEqual(packed.files.map(({ path }) => path).sort(), [
+      "DATA_LICENSE.md",
+      "IMPLEMENTATION_CHECKLIST.md",
+      "LICENSE",
+      "README.md",
+      "bin/generate-robots.mjs",
+      "data/crawlers.csv",
+      "data/crawlers.json",
+      "examples/allow-documented-automatic-crawlers.txt",
+      "examples/allow-search-block-training.txt",
+      "package.json",
+    ]);
+
+    const tarball = join(packDirectory, packed.filename);
+    await execFileAsync("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund", "--no-package-lock", tarball], {
+      cwd: installDirectory,
+    });
+    const executable = join(installDirectory, "node_modules", ".bin", "ai-crawler-robots");
+    for (const [policy, fixture] of [
+      ["search-only", "examples/allow-search-block-training.txt"],
+      ["allow-automatic", "examples/allow-documented-automatic-crawlers.txt"],
+    ]) {
+      const [{ stdout, stderr }, expected] = await Promise.all([
+        execFileAsync(executable, ["--policy", policy]),
+        readFile(new URL(fixture, root), "utf8"),
+      ]);
+      assert.equal(stderr, "");
+      assert.equal(stdout, expected);
+    }
+  } finally {
+    await rm(temporaryDirectory, { recursive: true, force: true });
+  }
 });
 
 test("citation metadata identifies the versioned work as an open dataset", async () => {
