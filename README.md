@@ -94,6 +94,8 @@ Review the generated text, merge it with existing rules, and test the public res
 
 [AnswerReady's free AI crawler checker](https://answerready.alternatefutures.ai/ai-crawler-checker?utm_source=github&utm_medium=resource-repository&utm_campaign=ai-crawler-reference) evaluates the public robots.txt rules for selected search crawlers. It does not call crawler access an AI-visibility score or promise a citation.
 
+If that check identifies work to ship, the [AnswerReady $69 Fix Pack](https://answerready.alternatefutures.ai/ai-seo-audit-service?utm_source=github&utm_medium=resource-repository&utm_campaign=ai-crawler-reference-fix-pack) provides implementation-ready changes for up to five public pages. Direct implementation and hosting are separate scopes.
+
 Published by [Alternate Futures](https://alternatefutures.ai/). Optional implementation and hosting are separately scoped through [Alternate Clouds](https://clouds.alternatefutures.ai/).
 
 ## Corrections and contributions
