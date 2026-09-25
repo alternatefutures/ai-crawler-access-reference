@@ -78,6 +78,21 @@ test("npm package metadata is complete, public, and narrowly scoped", async () =
   assert.equal(packageJson.bin["ai-crawler-robots"], "./bin/generate-robots.mjs");
   assert.deepEqual(packageJson.publishConfig, { access: "public" });
   assert.equal(packageJson.scripts.prepublishOnly, "npm test");
+  for (const keyword of [
+    "ai-crawlers",
+    "robots.txt",
+    "technical-seo",
+    "ai-search",
+    "ai-seo",
+    "aeo",
+    "answer-engine-optimization",
+    "generative-engine-optimization",
+    "gptbot",
+    "oai-searchbot",
+    "claudebot",
+    "perplexitybot",
+    "google-extended",
+  ]) assert.ok(packageJson.keywords.includes(keyword), `missing discovery keyword: ${keyword}`);
   assert.deepEqual(packageJson.files, [
     "bin/generate-robots.mjs",
     "data/crawlers.csv",

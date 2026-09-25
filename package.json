@@ -1,15 +1,26 @@
 {
   "name": "ai-crawler-access-reference",
   "version": "1.4.3",
-  "description": "Source-linked AI crawler controls and a zero-dependency robots.txt policy generator.",
+  "description": "Source-linked AI crawler controls and a zero-dependency robots.txt policy generator for AI search and training policies.",
   "keywords": [
     "ai-crawlers",
     "robots.txt",
     "technical-seo",
+    "ai-search",
+    "ai-seo",
+    "aeo",
+    "answer-engine-optimization",
+    "generative-engine-optimization",
+    "crawler-policy",
     "chatgpt",
     "claude",
     "perplexity",
-    "gemini"
+    "gemini",
+    "gptbot",
+    "oai-searchbot",
+    "claudebot",
+    "perplexitybot",
+    "google-extended"
   ],
   "homepage": "https://alternatefutures.github.io/ai-crawler-access-reference/",
   "bugs": {
