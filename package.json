@@ -1,7 +1,6 @@
 {
   "name": "ai-crawler-access-reference",
-  "version": "1.4.2",
-  "private": true,
+  "version": "1.4.3",
   "description": "Source-linked AI crawler controls and a zero-dependency robots.txt policy generator.",
   "keywords": [
     "ai-crawlers",
@@ -41,8 +40,12 @@
   "engines": {
     "node": ">=18"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "generate": "node bin/generate-robots.mjs",
+    "prepublishOnly": "npm test",
     "test": "node --test tests/reference.test.mjs"
   }
 }

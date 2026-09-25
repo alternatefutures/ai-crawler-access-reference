@@ -62,19 +62,22 @@ test("README states limits and publisher ownership", async () => {
   assert.match(readme, /intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User`/);
   assert.match(readme, /archive\/945d99c27346208525fc973e57fbe57a8b562424\.tar\.gz/);
   assert.match(readme, /pinned to an immutable commit/i);
+  assert.match(readme, /--package=ai-crawler-access-reference@1\.4\.3/);
 });
 
-test("npm package metadata is complete, private, and narrowly scoped", async () => {
+test("npm package metadata is complete, public, and narrowly scoped", async () => {
   const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
   assert.equal(packageJson.name, "ai-crawler-access-reference");
-  assert.equal(packageJson.version, "1.4.2");
-  assert.equal(packageJson.private, true);
+  assert.equal(packageJson.version, "1.4.3");
+  assert.equal(packageJson.private, undefined);
   assert.equal(packageJson.license, "MIT");
   assert.equal(packageJson.author.name, "Alternate Futures");
   assert.equal(packageJson.homepage, "https://alternatefutures.github.io/ai-crawler-access-reference/");
   assert.equal(packageJson.repository.url, "git+https://github.com/alternatefutures/ai-crawler-access-reference.git");
   assert.equal(packageJson.bugs.url, "https://github.com/alternatefutures/ai-crawler-access-reference/issues");
   assert.equal(packageJson.bin["ai-crawler-robots"], "./bin/generate-robots.mjs");
+  assert.deepEqual(packageJson.publishConfig, { access: "public" });
+  assert.equal(packageJson.scripts.prepublishOnly, "npm test");
   assert.deepEqual(packageJson.files, [
     "bin/generate-robots.mjs",
     "data/crawlers.csv",
@@ -125,7 +128,7 @@ test("the packed artifact installs cleanly and runs both policies", async () => 
       cwd: fileURLToPath(root),
     });
     const [packed] = JSON.parse(packOutput);
-    assert.equal(packed.id, "ai-crawler-access-reference@1.4.2");
+    assert.equal(packed.id, "ai-crawler-access-reference@1.4.3");
     assert.deepEqual(packed.files.map(({ path }) => path).sort(), [
       "DATA_LICENSE.md",
       "IMPLEMENTATION_CHECKLIST.md",
@@ -166,9 +169,9 @@ test("citation metadata identifies the versioned work as an open dataset", async
   assert.match(citation, /^type: dataset$/m);
   assert.match(citation, /^title: "AI Crawler Access Reference"$/m);
   assert.match(citation, /^  - name: "Alternate Futures"$/m);
-  assert.match(citation, /^version: "1\.4\.1"$/m);
-  assert.match(citation, /^date-released: "2026-09-12"$/m);
   assert.match(citation, /^license: CC0-1\.0$/m);
+  assert.match(citation, /^version: "1\.4\.3"$/m);
+  assert.match(citation, /^date-released: "2026-09-25"$/m);
   assert.match(citation, /^repository-code: "https:\/\/github\.com\/alternatefutures\/ai-crawler-access-reference"$/m);
   assert.match(citation, /^url: "https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\/"$/m);
 });

@@ -6,8 +6,8 @@ abstract: "A source-linked dataset of documented crawler and control tokens from
 authors:
   - name: "Alternate Futures"
     website: "https://alternatefutures.ai/"
-version: "1.4.1"
-date-released: "2026-09-12"
+version: "1.4.3"
+date-released: "2026-09-25"
 license: CC0-1.0
 repository-code: "https://github.com/alternatefutures/ai-crawler-access-reference"
 url: "https://alternatefutures.github.io/ai-crawler-access-reference/"

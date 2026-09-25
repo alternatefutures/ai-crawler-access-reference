@@ -64,6 +64,12 @@ The zero-dependency CLI prints to standard output and never edits a site or loca
 npm run generate -- --policy search-only
 ```
 
+For the reviewed npm release, run the exact version:
+
+```sh
+npm exec --yes --package=ai-crawler-access-reference@1.4.3 ai-crawler-robots -- --policy search-only
+```
+
 To run the reviewed CLI without an npm registry account or package publication, install the exact GitHub commit over HTTPS:
 
 ```sh
@@ -72,7 +78,7 @@ npm exec --yes --package=https://github.com/alternatefutures/ai-crawler-access-r
 
 That URL is pinned to an immutable commit rather than a moving branch. Review the linked source before running third-party code.
 
-The package manifest also exposes the `ai-crawler-robots` executable for a reviewed local installation or a future approved registry release:
+The package manifest also exposes the `ai-crawler-robots` executable for a reviewed local installation:
 
 ```sh
 ai-crawler-robots --policy search-only
