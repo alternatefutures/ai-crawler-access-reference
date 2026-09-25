@@ -54,9 +54,14 @@ test("README states limits and publisher ownership", async () => {
   assert.match(readme, /Published by \[Alternate Futures\]/);
   assert.match(readme, /interactive browser reference and policy generator/);
   assert.match(readme, /utm_source=github/);
+  assert.match(readme, /AnswerReady \$69 Fix Pack/);
+  assert.match(readme, /utm_campaign=ai-crawler-reference-fix-pack/);
+  assert.match(readme, /Direct implementation and hosting are separate scopes/);
   assert.match(readme, /\[CC0 1\.0\]\(DATA_LICENSE\.md\)/);
   assert.match(readme, /never edits a site or local file/i);
   assert.match(readme, /intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User`/);
+  assert.match(readme, /archive\/945d99c27346208525fc973e57fbe57a8b562424\.tar\.gz/);
+  assert.match(readme, /pinned to an immutable commit/i);
 });
 
 test("npm package metadata is complete, private, and narrowly scoped", async () => {
@@ -181,13 +186,16 @@ test("GitHub Pages reference preserves source, policy, and ownership boundaries"
   assert.match(page, /Published by/);
   assert.match(page, /Alternate Futures/);
   assert.match(page, /Alternate Clouds/);
+  assert.match(page, /\$69 Fix Pack/);
+  assert.match(page, /utm_campaign=ai-crawler-reference-fix-pack/);
+  assert.match(page, /Direct implementation and recurring hosting are separately scoped/);
   assert.match(page, /2026-08-29/);
   assert.match(page, /IMPLEMENTATION_CHECKLIST\.md/);
   assert.match(page, /href="data\/crawlers\.csv"/);
   assert.match(page, /href="data\/crawlers\.json"/);
   assert.match(robots, /Sitemap: https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\//);
-  assert.match(sitemap, /<lastmod>2026-09-12<\/lastmod>/);
+  assert.match(sitemap, /<lastmod>2026-09-23<\/lastmod>/);
 });
 
 test("GitHub Pages publishes matching downloads and valid Dataset metadata", async () => {
