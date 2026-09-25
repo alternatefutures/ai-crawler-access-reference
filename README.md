@@ -64,6 +64,12 @@ The zero-dependency CLI prints to standard output and never edits a site or loca
 npm run generate -- --policy search-only
 ```
 
+For the reviewed npm release, run the exact version:
+
+```sh
+npm exec --yes --package=ai-crawler-access-reference@1.4.3 ai-crawler-robots -- --policy search-only
+```
+
 To run the reviewed CLI without an npm registry account or package publication, install the exact GitHub commit over HTTPS:
 
 ```sh
@@ -72,7 +78,7 @@ npm exec --yes --package=https://github.com/alternatefutures/ai-crawler-access-r
 
 That URL is pinned to an immutable commit rather than a moving branch. Review the linked source before running third-party code.
 
-The package manifest also exposes the `ai-crawler-robots` executable for a reviewed local installation or a future approved registry release:
+The package manifest also exposes the `ai-crawler-robots` executable for a reviewed local installation:
 
 ```sh
 ai-crawler-robots --policy search-only
@@ -92,11 +98,11 @@ Review the generated text, merge it with existing rules, and test the public res
 
 ## Verify a site
 
-[AnswerReady's free AI crawler checker](https://answerready.alternatefutures.ai/ai-crawler-checker?utm_source=github&utm_medium=resource-repository&utm_campaign=ai-crawler-reference) evaluates the public robots.txt rules for selected search crawlers. It does not call crawler access an AI-visibility score or promise a citation.
+[AnswerReady's free AI crawler checker](https://answerready.alternatefutures.ai/ai-crawler-checker) evaluates the public robots.txt rules for selected search crawlers. It does not call crawler access an AI-visibility score or promise a citation.
 
-For the provider-by-provider distinction between search discovery, model development, and user-triggered retrieval, read the [source-linked AI crawler robots.txt guide](https://answerready.alternatefutures.ai/ai-crawler-robots-txt-guide?utm_source=github&utm_medium=resource-repository&utm_campaign=ai-crawler-guide).
+For the provider-by-provider distinction between search discovery, model development, and user-triggered retrieval, read the [source-linked AI crawler robots.txt guide](https://answerready.alternatefutures.ai/ai-crawler-robots-txt-guide).
 
-If that check identifies work to ship, the [AnswerReady $69 Fix Pack](https://answerready.alternatefutures.ai/ai-seo-audit-service?utm_source=github&utm_medium=resource-repository&utm_campaign=ai-crawler-reference-fix-pack) provides implementation-ready changes for up to five public pages. Direct implementation and hosting are separate scopes.
+If that check identifies work to ship, the [AnswerReady $69 Fix Pack](https://answerready.alternatefutures.ai/ai-seo-audit-service) provides implementation-ready changes for up to five public pages. Direct implementation and hosting are separate scopes.
 
 Published by [Alternate Futures](https://alternatefutures.ai/). Optional implementation and hosting are separately scoped through [Alternate Clouds](https://clouds.alternatefutures.ai/).
 
