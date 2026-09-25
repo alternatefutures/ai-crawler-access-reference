@@ -46,7 +46,7 @@
     "IMPLEMENTATION_CHECKLIST.md"
   ],
   "bin": {
-    "ai-crawler-robots": "./bin/generate-robots.mjs"
+    "ai-crawler-robots": "bin/generate-robots.mjs"
   },
   "engines": {
     "node": ">=18"

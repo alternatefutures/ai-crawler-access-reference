@@ -76,7 +76,7 @@ test("npm package metadata is complete, public, and narrowly scoped", async () =
   assert.equal(packageJson.homepage, "https://alternatefutures.github.io/ai-crawler-access-reference/");
   assert.equal(packageJson.repository.url, "git+https://github.com/alternatefutures/ai-crawler-access-reference.git");
   assert.equal(packageJson.bugs.url, "https://github.com/alternatefutures/ai-crawler-access-reference/issues");
-  assert.equal(packageJson.bin["ai-crawler-robots"], "./bin/generate-robots.mjs");
+  assert.equal(packageJson.bin["ai-crawler-robots"], "bin/generate-robots.mjs");
   assert.deepEqual(packageJson.publishConfig, { access: "public" });
   assert.equal(packageJson.scripts.prepublishOnly, "npm test");
   for (const keyword of [
@@ -138,10 +138,12 @@ test("the packed artifact installs cleanly and runs both policies", async () => 
   const temporaryDirectory = await mkdtemp(join(tmpdir(), "ai-crawler-package-"));
   const packDirectory = join(temporaryDirectory, "pack");
   const installDirectory = join(temporaryDirectory, "install");
+  const npmEnvironment = { ...process.env, npm_config_dry_run: "false" };
   try {
     await Promise.all([mkdir(packDirectory), mkdir(installDirectory)]);
     const { stdout: packOutput } = await execFileAsync("npm", ["pack", "--json", "--pack-destination", packDirectory], {
       cwd: fileURLToPath(root),
+      env: npmEnvironment,
     });
     const [packed] = JSON.parse(packOutput);
     assert.equal(packed.id, "ai-crawler-access-reference@1.4.3");
@@ -161,6 +163,7 @@ test("the packed artifact installs cleanly and runs both policies", async () => 
     const tarball = join(packDirectory, packed.filename);
     await execFileAsync("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund", "--no-package-lock", tarball], {
       cwd: installDirectory,
+      env: npmEnvironment,
     });
     const executable = join(installDirectory, "node_modules", ".bin", "ai-crawler-robots");
     for (const [policy, fixture] of [
