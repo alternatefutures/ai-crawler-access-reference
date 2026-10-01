@@ -53,28 +53,47 @@ test("README states limits and publisher ownership", async () => {
   assert.match(readme, /does \*\*not\*\* guarantee crawling, indexing, ranking, recommendations, mentions, or citations/i);
   assert.match(readme, /Published by \[Alternate Futures\]/);
   assert.match(readme, /interactive browser reference and policy generator/);
-  assert.match(readme, /utm_source=github/);
+  assert.match(readme, /https:\/\/answerready\.alternatefutures\.ai\/ai-crawler-checker\)/);
   assert.match(readme, /AnswerReady \$69 Fix Pack/);
-  assert.match(readme, /utm_campaign=ai-crawler-reference-fix-pack/);
+  assert.match(readme, /https:\/\/answerready\.alternatefutures\.ai\/ai-seo-audit-service\)/);
+  assert.doesNotMatch(readme, /utm_source=github/);
   assert.match(readme, /Direct implementation and hosting are separate scopes/);
   assert.match(readme, /\[CC0 1\.0\]\(DATA_LICENSE\.md\)/);
   assert.match(readme, /never edits a site or local file/i);
   assert.match(readme, /intentionally omit `ChatGPT-User`, `Claude-User`, and `Perplexity-User`/);
   assert.match(readme, /archive\/945d99c27346208525fc973e57fbe57a8b562424\.tar\.gz/);
   assert.match(readme, /pinned to an immutable commit/i);
+  assert.match(readme, /--package=ai-crawler-access-reference@1\.4\.3/);
 });
 
-test("npm package metadata is complete, private, and narrowly scoped", async () => {
+test("npm package metadata is complete, public, and narrowly scoped", async () => {
   const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
   assert.equal(packageJson.name, "ai-crawler-access-reference");
-  assert.equal(packageJson.version, "1.4.2");
-  assert.equal(packageJson.private, true);
+  assert.equal(packageJson.version, "1.4.3");
+  assert.equal(packageJson.private, undefined);
   assert.equal(packageJson.license, "MIT");
   assert.equal(packageJson.author.name, "Alternate Futures");
   assert.equal(packageJson.homepage, "https://alternatefutures.github.io/ai-crawler-access-reference/");
   assert.equal(packageJson.repository.url, "git+https://github.com/alternatefutures/ai-crawler-access-reference.git");
   assert.equal(packageJson.bugs.url, "https://github.com/alternatefutures/ai-crawler-access-reference/issues");
-  assert.equal(packageJson.bin["ai-crawler-robots"], "./bin/generate-robots.mjs");
+  assert.equal(packageJson.bin["ai-crawler-robots"], "bin/generate-robots.mjs");
+  assert.deepEqual(packageJson.publishConfig, { access: "public" });
+  assert.equal(packageJson.scripts.prepublishOnly, "npm test");
+  for (const keyword of [
+    "ai-crawlers",
+    "robots.txt",
+    "technical-seo",
+    "ai-search",
+    "ai-seo",
+    "aeo",
+    "answer-engine-optimization",
+    "generative-engine-optimization",
+    "gptbot",
+    "oai-searchbot",
+    "claudebot",
+    "perplexitybot",
+    "google-extended",
+  ]) assert.ok(packageJson.keywords.includes(keyword), `missing discovery keyword: ${keyword}`);
   assert.deepEqual(packageJson.files, [
     "bin/generate-robots.mjs",
     "data/crawlers.csv",
@@ -119,13 +138,15 @@ test("the packed artifact installs cleanly and runs both policies", async () => 
   const temporaryDirectory = await mkdtemp(join(tmpdir(), "ai-crawler-package-"));
   const packDirectory = join(temporaryDirectory, "pack");
   const installDirectory = join(temporaryDirectory, "install");
+  const npmEnvironment = { ...process.env, npm_config_dry_run: "false" };
   try {
     await Promise.all([mkdir(packDirectory), mkdir(installDirectory)]);
     const { stdout: packOutput } = await execFileAsync("npm", ["pack", "--json", "--pack-destination", packDirectory], {
       cwd: fileURLToPath(root),
+      env: npmEnvironment,
     });
     const [packed] = JSON.parse(packOutput);
-    assert.equal(packed.id, "ai-crawler-access-reference@1.4.2");
+    assert.equal(packed.id, "ai-crawler-access-reference@1.4.3");
     assert.deepEqual(packed.files.map(({ path }) => path).sort(), [
       "DATA_LICENSE.md",
       "IMPLEMENTATION_CHECKLIST.md",
@@ -142,6 +163,7 @@ test("the packed artifact installs cleanly and runs both policies", async () => 
     const tarball = join(packDirectory, packed.filename);
     await execFileAsync("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund", "--no-package-lock", tarball], {
       cwd: installDirectory,
+      env: npmEnvironment,
     });
     const executable = join(installDirectory, "node_modules", ".bin", "ai-crawler-robots");
     for (const [policy, fixture] of [
@@ -166,9 +188,9 @@ test("citation metadata identifies the versioned work as an open dataset", async
   assert.match(citation, /^type: dataset$/m);
   assert.match(citation, /^title: "AI Crawler Access Reference"$/m);
   assert.match(citation, /^  - name: "Alternate Futures"$/m);
-  assert.match(citation, /^version: "1\.4\.1"$/m);
-  assert.match(citation, /^date-released: "2026-09-12"$/m);
   assert.match(citation, /^license: CC0-1\.0$/m);
+  assert.match(citation, /^version: "1\.4\.3"$/m);
+  assert.match(citation, /^date-released: "2026-09-25"$/m);
   assert.match(citation, /^repository-code: "https:\/\/github\.com\/alternatefutures\/ai-crawler-access-reference"$/m);
   assert.match(citation, /^url: "https:\/\/alternatefutures\.github\.io\/ai-crawler-access-reference\/"$/m);
 });
